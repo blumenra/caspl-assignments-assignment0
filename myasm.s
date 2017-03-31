@@ -14,14 +14,64 @@ do_Str:                        	; functions are defined as labels
 ;;;;;;;;;;;;;;;; FUNCTION EFFECTIVE CODE STARTS HERE ;;;;;;;;;;;;;;;; 
 
 	mov	dword [an], 0		; initialize answer
-	label_here:
+    label_here:
 
-   		; Your code goes somewhere around here...
+        ; Your code goes somewhere around here...
 
-		inc ecx      	    ; increment pointer
-		cmp byte [ecx], 0   ; check if byte pointed to is zero
-		jnz label_here      ; keep looping until it is null terminated
+        cmp byte [ecx], 28h ;cheack if '('
+        je conv_left_bracket
 
+        cmp byte [ecx], 29h ;cheack if ')'
+        je conv_right_bracket
+
+        jmp first_check
+        
+
+    first_check:
+        cmp byte [ecx], 41h ;cheack if greater or eq to 'A'
+        jae second_check
+        jmp non_char
+
+    second_check:
+        cmp byte [ecx], 5bh ;cheack if greater or eq to 'Z'
+        jae third_check
+        jmp before_loop_again
+
+    third_check:
+        cmp byte [ecx], 61h ;cheack if greater or eq to 'a'
+        jae forth_check
+        jmp non_char
+
+    forth_check:
+        cmp byte [ecx], 7ah ;cheack if smaller or eq to 'z'
+        jbe conv_to_upper_case
+        jmp non_char
+
+
+    conv_to_upper_case:
+        sub byte [ecx], 32
+        jmp before_loop_again
+
+
+    conv_left_bracket:
+        mov     byte [ecx], 3ch
+        jmp non_char
+
+
+    conv_right_bracket:
+        mov     byte [ecx], 3eh
+
+
+    non_char:
+        inc word [an]
+
+
+    before_loop_again:
+        inc ecx             ; increment pointer
+        cmp byte [ecx], 0   ; check if byte pointed to is zero
+        jnz label_here      ; keep looping until it is null terminated
+    
+        
 
 ;;;;;;;;;;;;;;;; FUNCTION EFFECTIVE CODE ENDS HERE ;;;;;;;;;;;;;;;; 
 
